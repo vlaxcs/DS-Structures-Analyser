@@ -136,11 +136,15 @@ void SkipList::Print() const {
 		while(crnt != NULL) {
 			while(bottomLevelCrnt->key != crnt->key) {
 				bottomLevelCrnt = bottomLevelCrnt->forward[0];
-				cout << "    ";
+				cout << "----";
 			}
-			cout << std::left << std::setw(3) << crnt->key << " ";
+			cout << std::setfill('-') << std::setw(3) << crnt->key << "-";
 			crnt = crnt->forward[i];
 			bottomLevelCrnt = bottomLevelCrnt->forward[0];
+		}
+		while(bottomLevelCrnt != NULL) {
+			bottomLevelCrnt = bottomLevelCrnt->forward[0];
+			cout << "----";
 		}
 		cout << endl;
 	}

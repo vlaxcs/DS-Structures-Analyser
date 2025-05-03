@@ -17,6 +17,7 @@ int main() {
 	list.Insert(12);
 	list.Insert(19);
 	list.Insert(17);
+	list.Insert(17); // Cant hold duplicates
 	list.Insert(26);
 	list.Insert(21);
 	list.Insert(25);
