@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "SkipList.h"
+#include "SplayTree.h"
 
 using namespace std;
 
@@ -37,4 +38,14 @@ int main() {
 	} else {
 		cout << "Does not contain 19\n";
 	}
+
+	SplayTree ST;
+	ST.insert(11);
+	ST.insert(69);
+	ST.insert(121);
+	ST.insert(15);
+	ST.insert(12);
+	ST.insert(19);
+
+	ST.POT(ST.getRoot());
 }

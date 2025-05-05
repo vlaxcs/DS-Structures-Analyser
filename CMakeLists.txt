@@ -4,5 +4,7 @@ project(T2SD)
 set(CMAKE_CXX_STANDARD 26)
 
 add_executable(T2SD main.cpp
-        SkipList.cpp
-        SkipList.h)
+            src/SkipList.cpp
+            src/SplayTree.cpp)
+
+target_include_directories(T2SD PUBLIC include)
