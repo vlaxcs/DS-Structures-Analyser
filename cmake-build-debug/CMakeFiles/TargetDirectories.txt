@@ -1,3 +1,0 @@
-C:/AAA. Hello world/DS-Structures/cmake-build-debug/CMakeFiles/T2SD.dir
-C:/AAA. Hello world/DS-Structures/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/AAA. Hello world/DS-Structures/cmake-build-debug/CMakeFiles/rebuild_cache.dir
