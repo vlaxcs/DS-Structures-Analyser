@@ -31,4 +31,5 @@ public:
     void setRoot(SplayNode* root);
     [[nodiscard]] SplayNode* getRoot() const;
 
+    ~SplayTree() = default;
 };

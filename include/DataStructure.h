@@ -8,11 +8,15 @@ private:
     std::vector<std::chrono::duration<double, std::milli>> runtimes;
 
 public:
-    DataStructure();
+    DataStructure() = default;
 
-    void addLastRuntime(const auto &current_runtime);
-    const auto& getRuntimes();
+    template<typename T>
+    void addLastRuntime(const T& current_runtime) {
+        runtimes.push_back(current_runtime);
+    }
 
-    ~DataStructure();
+    std::vector<std::chrono::duration<double, std::milli>> getRuntimes();
+
+    virtual ~DataStructure() = default;
 
 };

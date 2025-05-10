@@ -21,8 +21,11 @@ private:
 
 public:
     BinaryTree() : root(nullptr) {}
+
     void insert(int val);
     bool search(int val);
     void erase(int val);
     void inorderPrint();
+
+    ~BinaryTree() override = default;
 };

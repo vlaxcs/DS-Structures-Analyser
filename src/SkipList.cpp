@@ -2,12 +2,12 @@
 
 #include <cmath>
 #include <iomanip>
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include <random>
+#include <memory>
 
 using namespace std;
-using namespace SkipLists;
 
 Node::Node(int key, int level) {
 	this->key = key;
@@ -17,8 +17,6 @@ Node::Node(int key, int level) {
 Node::~Node() {
 	delete[] forward;
 }
-
-
 
 SkipList::SkipList() : maxLevel(16), p(0.5f), level(0) {
 	head = new Node(-1, maxLevel);
@@ -33,6 +31,7 @@ SkipList::SkipList(int maxLevel, float p) : maxLevel(maxLevel), p(p), level(0) {
 SkipList::~SkipList() {
 	Clear();
 }
+
 void SkipList::Clear() {
 	Node* current = head;
 	while (current != 0) {

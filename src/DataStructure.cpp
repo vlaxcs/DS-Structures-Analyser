@@ -1,9 +1,5 @@
 #include "DataStructure.h"
 
-void DataStructure::addLastRuntime(const auto &current_runtime) {
-    this->runtimes.push_back(current_runtime);
-}
-
-const auto& DataStructure::getRuntimes() {
+std::vector<std::chrono::duration<double, std::milli>> DataStructure::getRuntimes() {
     return runtimes;
 }

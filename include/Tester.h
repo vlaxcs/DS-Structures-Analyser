@@ -3,7 +3,6 @@
 #include "SplayTree.h"
 #include "SkipList.h"
 #include "BinaryTree.h"
-#include "DataStructure.h"
 
 #include <string>
 #include <chrono>
@@ -21,10 +20,9 @@ private:
   std::vector<std::chrono::duration<double, std::milli>> runtimes;
 
 public:
+    Tester() : tests_path("../Python_TestsGenerator/Tests"), results_path("../Results"){};
 
-  Tester() : tests_path("./Python_TestsGenerator"), results_path("./Results"){}
-
-    std::vector<std::pair<std::string, int>> Tester::setup(const std::string& file_name) {
+    static std::vector<std::pair<std::string, int>> setup(const std::string& file_name) {
         std::vector<std::pair<std::string, int>> operations;
         std::ifstream f(file_name);
         if (!f.is_open()) {
@@ -44,10 +42,11 @@ public:
         return operations;
     }
 
-    void run() const{
-        data_structure ds;
+    void run() const {
+//        data_structure ds;
 
         for (const auto& file : std::filesystem::directory_iterator(tests_path)){
+            data_structure ds;
             if (file.is_regular_file()) {
                 std::string file_name = tests_path + "/" + file.path().filename().string();
                 std::cout << std::endl << "Reading data from: " << file_name << std::endl;
@@ -57,11 +56,11 @@ public:
                 bool status(true);
                 auto start = std::chrono::high_resolution_clock::now();
 
-                for (auto op : operations){
-                    switch (op.first) {
-                      case "insert": //ds.insert(itp.second); break;
-                      case "search": //ds.search(itp.second); break;
-                      case "delete": //ds.erase(itp.second); break;
+                for (const auto& op : operations){
+                    switch (op.first[0]) {
+                      case 'i': ds.insert(op.second); break;
+                      case 's': ds.search(op.second); break;
+                      case 'd': ds.erase(op.second); break;
                       default: status = false; break;
                     }
                 }
@@ -69,6 +68,7 @@ public:
                 auto end = std::chrono::high_resolution_clock::now();
 
                 const std::chrono::duration<double, std::milli> current_runtime = end - start;
+                std::cout << current_runtime;
 
                 if (status) {
                     ds.addLastRuntime(current_runtime);
@@ -76,11 +76,9 @@ public:
                     const std::chrono::duration<double, std::milli> no_value{0.0};
                     ds.addLastRuntime(no_value);
                 }
-
             }
         }
-        const auto sort_times = ds.getSortTimes();
+       // auto sort_times = ds.getRuntimes();
         //Test::setStats(current_results_path, sort_name, sort_times);
     }
-
 };

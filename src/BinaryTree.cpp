@@ -67,36 +67,10 @@ bool BinaryTree::search(int val) {
     return search(root, val);
 }
 
-void BinaryTree::deleteValue(int val) {
+void BinaryTree::erase(int val) {
     root = deleteNode(root, val);
 }
 
 void BinaryTree::inorderPrint() {
     inorder(root);
-}
-
-int main() {
-    ifstream fin("input.txt");
-    if (!fin) {
-        cerr << "Error opening input file.\n";
-        return 1;
-    }
-
-    BinaryTree tree;
-    int a, b;
-    while (fin >> a >> b) {
-        if (a == 1) {
-            tree.insert(b);
-        } else if (a == 2) {
-            cout << (tree.search(b) ? 1 : 0) << " ";
-        } else if (a == 3) {
-            tree.deleteValue(b);
-        }
-    }
-
-    cout << "\n";
-    tree.inorderPrint();
-    cout << "\n";
-
-    return 0;
 }

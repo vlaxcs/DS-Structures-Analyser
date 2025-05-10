@@ -2,39 +2,33 @@
 
 #include "DataStructure.h"
 
-namespace SkipLists {
+struct Node {
+	int key;
+	Node** forward;
+	Node(int key, int level);
 
-	struct Node {
-		int key;
-		Node** forward;
-		Node(int key, int level);
-
-		~Node();
-	};
+	~Node();
+};
 
 
+class SkipList : public DataStructure {
+	int maxLevel;
+	float p;
+	int level;
+	Node* head;
 
-	class SkipList : public DataStructure {
-		int maxLevel;
-		float p;
-		int level;
-		Node* head;
+	int GetRandomLevel() const;
 
-		int GetRandomLevel() const;
+public:
+	SkipList();
+	SkipList(int expectedSize);
+	SkipList(int maxLevel, float p);
 
-	public:
-		SkipList();
-		SkipList(int expectedSize);
-		SkipList(int maxLevel, float p);
-		~SkipList();
+	void insert(int key);
+	void erase(int key);
+	[[nodiscard]] bool search(int key) const;
+	void Print() const;
+	void Clear();
 
-		void insert(int key);
-		void erase(int key);
-		bool search(int key) const;
-		void Print() const;
-		void Clear();
-	};
-
-
-
-}
+	~SkipList();
+};
