@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include "DataStructure.h"
 
 struct SplayNode {
     float value;
@@ -8,7 +8,7 @@ struct SplayNode {
     SplayNode* right;
 };
 
-class SplayTree {
+class SplayTree : public DataStructure{
     SplayNode* root;
 
     SplayNode* newSplayNode(float value);
@@ -24,8 +24,9 @@ class SplayTree {
 public:
     SplayTree();
 
-    SplayNode* insert(int key);
-    void POT(SplayNode* current);
+    SplayNode* insert(float value);
+    SplayNode* search(float value);
+    void POT(const SplayNode* current);
 
     void setRoot(SplayNode* root);
     [[nodiscard]] SplayNode* getRoot() const;

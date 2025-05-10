@@ -54,7 +54,7 @@ int SkipList::GetRandomLevel() const {
 	return level;
 }
 
-void SkipList::Insert(int key) {
+void SkipList::insert(int key) {
 	Node* current = head;
 	Node* update[maxLevel + 1];
 
@@ -83,7 +83,7 @@ void SkipList::Insert(int key) {
 		update[i]->forward[i] = n;
 	}
 }
-void SkipList::Remove(int key) {
+void SkipList::erase(int key) {
 	Node* current = head;
 
 	Node* update[maxLevel + 1];
@@ -113,7 +113,7 @@ void SkipList::Remove(int key) {
 	delete current;
 }
 
-bool SkipList::Contains(int key) const {
+bool SkipList::search(int key) const {
 	int currentLevel = level;
 	Node* current = head;
 	while(current != NULL) {

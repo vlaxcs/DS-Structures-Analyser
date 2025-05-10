@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DataStructure.h"
+
 namespace SkipLists {
 
 	struct Node {
@@ -12,7 +14,7 @@ namespace SkipLists {
 
 
 
-	class SkipList {
+	class SkipList : public DataStructure {
 		int maxLevel;
 		float p;
 		int level;
@@ -26,9 +28,9 @@ namespace SkipLists {
 		SkipList(int maxLevel, float p);
 		~SkipList();
 
-		void Insert(int key);
-		void Remove(int key);
-		bool Contains(int key) const;
+		void insert(int key);
+		void erase(int key);
+		bool search(int key) const;
 		void Print() const;
 		void Clear();
 	};

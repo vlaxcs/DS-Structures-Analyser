@@ -60,7 +60,7 @@ SplayNode* SplayTree::splay(SplayNode* root, float value) {
     }
 }
 
-SplayNode* SplayTree::insert(int value) {
+SplayNode* SplayTree::insert(const float value) {
     if (root == nullptr) {
         root = newSplayNode(value);
         return root;
@@ -86,9 +86,12 @@ SplayNode* SplayTree::insert(int value) {
     return root;
 }
 
-void SplayTree::POT(SplayNode* current) {
+SplayNode* SplayTree::search(const float value) {
+    return splay(root, value);
+}
+
+void SplayTree::POT(const SplayNode* current) {
     if (current != nullptr) {
-        std::cout << current->value << " ";
         POT(current->left);
         POT(current->right);
     }
