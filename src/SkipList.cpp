@@ -59,7 +59,7 @@ void SkipList::Insert(int key) {
 	Node* update[maxLevel + 1];
 
 	for(int i = level; i>= 0; i--) {
-		while(current->forward[i] != NULL && current->forward[i]->key < key) {
+		while(current->forward[i] != NULL && current->forward[i]->key <= key) {
 			current = current->forward[i];
 		}
 		update[i] = current;
@@ -67,7 +67,7 @@ void SkipList::Insert(int key) {
 
 
 	current = current->forward[0];
-	if(current != NULL && current->key == key) return;
+	// if(current != NULL && current->key == key) return;
 
 	int randLevel = GetRandomLevel();
 	if(randLevel > level) {
