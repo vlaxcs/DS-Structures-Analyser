@@ -5,6 +5,7 @@
 /// pentru input, un fisier "input.txt" cu un string de forma (nr comanda, nr asupra caruia se efectueaza comanda) * n
 #include <iostream>
 #include <fstream>
+#include <stack>
 #include "BinaryTree.h"
 using namespace std;
 
@@ -29,36 +30,6 @@ BTreeNode* BinaryTree::findMin(BTreeNode* node) {
     return node;
 }
 
-BTreeNode* BinaryTree::deleteNode(BTreeNode* node, int val) {
-    if (!node) return nullptr;
-    if (val < (*node).value)
-        (*node).left = deleteNode((*node).left, val);
-    else if (val > (*node).value)
-        (*node).right = deleteNode((*node).right, val);
-    else {
-        if (!(*node).left) {
-            BTreeNode* temp = (*node).right;
-            delete node;
-            return temp;
-        } else if (!(*node).right) {
-            BTreeNode* temp = (*node).left;
-            delete node;
-            return temp;
-        }
-        BTreeNode* temp = findMin((*node).right);
-        (*node).value = (*temp).value;
-        (*node).right = deleteNode((*node).right, (*temp).value);
-    }
-    return node;
-}
-
-void BinaryTree::inorder(BTreeNode* node) {
-    if (!node) return;
-    inorder((*node).left);
-    cout << (*node).value << " ";
-    inorder((*node).right);
-}
-
 void BinaryTree::insert(int val) {
     BTreeNode* newNode = new BTreeNode(val);
     if (!root) {
@@ -75,7 +46,7 @@ void BinaryTree::insert(int val) {
         else if (val > curr->value)
             curr = curr->right;
         else {
-            delete newNode;  // value already exists
+            delete newNode;
             return;
         }
     }
@@ -88,16 +59,76 @@ void BinaryTree::insert(int val) {
 
 
 bool BinaryTree::search(int val) {
-    return search(root, val);
+    BTreeNode* curr = root;
+    while (curr) {
+        if (val == curr->value)
+            return true;
+        else if (val < curr->value)
+            curr = curr->left;
+        else
+            curr = curr->right;
+    }
+    return false;
 }
 
 void BinaryTree::deleteValue(int val) {
-    root = deleteNode(root, val);
+    BTreeNode* parent = nullptr;
+    BTreeNode* curr = root;
+
+    while (curr && curr->value != val) {
+        parent = curr;
+        if (val < curr->value)
+            curr = curr->left;
+        else
+            curr = curr->right;
+    }
+
+    if (!curr) return;
+
+    if (curr->left && curr->right) {
+        BTreeNode* successorParent = curr;
+        BTreeNode* successor = curr->right;
+        while (successor->left) {
+            successorParent = successor;
+            successor = successor->left;
+        }
+
+        curr->value = successor->value;
+        curr = successor;
+        parent = successorParent;
+    }
+
+    BTreeNode* child = (curr->left) ? curr->left : curr->right;
+
+    if (!parent)
+        root = child;
+    else if (parent->left == curr)
+        parent->left = child;
+    else
+        parent->right = child;
+
+    delete curr;
 }
 
 void BinaryTree::inorderPrint() {
-    inorder(root);
+    std::stack<BTreeNode*> st;
+    BTreeNode* curr = root;
+
+    while (curr || !st.empty()) {
+
+        while (curr) {
+            st.push(curr);
+            curr = curr->left;
+        }
+
+        curr = st.top();
+        st.pop();
+        std::cout << curr->value << ' ';
+
+        curr = curr->right;
+    }
 }
+
 
 int main() {
     ifstream fin("input.txt");
