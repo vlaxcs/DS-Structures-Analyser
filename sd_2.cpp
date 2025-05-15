@@ -3,134 +3,266 @@
 /// 2 pentru cautarea unui numar (cout 1 for found, 0 for not found)
 /// 3 pentru scoaterea unui numar din binary tree
 /// pentru input, un fisier "input.txt" cu un string de forma (nr comanda, nr asupra caruia se efectueaza comanda) * n
+
 #include <iostream>
 #include <fstream>
 #include <stack>
-#include "BinaryTree.h"
 using namespace std;
 
-BTreeNode* BinaryTree::insert(BTreeNode* node, int val) {
-    if (!node) return new BTreeNode(val);
-    if (val < (*node).value)
-        (*node).left = insert((*node).left, val);
-    else if (val > (*node).value)
-        (*node).right = insert((*node).right, val);
-    return node;
-}
+enum Color { RED, BLACK };
 
-bool BinaryTree::search(BTreeNode* node, int val) {
-    if (!node) return false;
-    if (val == (*node).value) return true;
-    return val < (*node).value ? search((*node).left, val) : search((*node).right, val);
-}
+struct BTreeNode {
+    int value;
+    Color color;
+    BTreeNode* left;
+    BTreeNode* right;
+    BTreeNode* parent;
+    BTreeNode(int val) : value(val), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
+};
 
-BTreeNode* BinaryTree::findMin(BTreeNode* node) {
-    while (node && (*node).left)
-        node = (*node).left;
-    return node;
-}
+class BinaryTree {
+private:
+    BTreeNode* root;
 
-void BinaryTree::insert(int val) {
-    BTreeNode* newNode = new BTreeNode(val);
-    if (!root) {
-        root = newNode;
-        return;
+    void rotateLeft(BTreeNode* &root, BTreeNode* x) {
+        BTreeNode* y = x->right;
+        x->right = y->left;
+        if (y->left) y->left->parent = x;
+        y->parent = x->parent;
+        if (!x->parent) root = y;
+        else if (x == x->parent->left) x->parent->left = y;
+        else x->parent->right = y;
+        y->left = x;
+        x->parent = y;
     }
 
-    BTreeNode* curr = root;
-    BTreeNode* parent = nullptr;
-    while (curr) {
-        parent = curr;
-        if (val < curr->value)
-            curr = curr->left;
-        else if (val > curr->value)
-            curr = curr->right;
-        else {
-            delete newNode;
-            return;
+    void rotateRight(BTreeNode* &root, BTreeNode* y) {
+        BTreeNode* x = y->left;
+        y->left = x->right;
+        if (x->right) x->right->parent = y;
+        x->parent = y->parent;
+        if (!y->parent) root = x;
+        else if (y == y->parent->left) y->parent->left = x;
+        else y->parent->right = x;
+        x->right = y;
+        y->parent = x;
+    }
+
+    void insertFixup(BTreeNode* &root, BTreeNode* z) {
+        while (z->parent && z->parent->color == RED) {
+            if (z->parent == z->parent->parent->left) {
+                BTreeNode* y = z->parent->parent->right;
+                if (y && y->color == RED) {
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                } else {
+                    if (z == z->parent->right) {
+                        z = z->parent;
+                        rotateLeft(root, z);
+                    }
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    rotateRight(root, z->parent->parent);
+                }
+            } else {
+                BTreeNode* y = z->parent->parent->left;
+                if (y && y->color == RED) {
+                    z->parent->color = BLACK;
+                    y->color = BLACK;
+                    z->parent->parent->color = RED;
+                    z = z->parent->parent;
+                } else {
+                    if (z == z->parent->left) {
+                        z = z->parent;
+                        rotateRight(root, z);
+                    }
+                    z->parent->color = BLACK;
+                    z->parent->parent->color = RED;
+                    rotateLeft(root, z->parent->parent);
+                }
+            }
         }
+        root->color = BLACK;
     }
 
-    if (val < parent->value)
-        parent->left = newNode;
-    else
-        parent->right = newNode;
-}
-
-
-bool BinaryTree::search(int val) {
-    BTreeNode* curr = root;
-    while (curr) {
-        if (val == curr->value)
-            return true;
-        else if (val < curr->value)
-            curr = curr->left;
+    void transplant(BTreeNode* &root, BTreeNode* u, BTreeNode* v) {
+        if (!u->parent)
+            root = v;
+        else if (u == u->parent->left)
+            u->parent->left = v;
         else
-            curr = curr->right;
-    }
-    return false;
-}
-
-void BinaryTree::deleteValue(int val) {
-    BTreeNode* parent = nullptr;
-    BTreeNode* curr = root;
-
-    while (curr && curr->value != val) {
-        parent = curr;
-        if (val < curr->value)
-            curr = curr->left;
-        else
-            curr = curr->right;
+            u->parent->right = v;
+        if (v) v->parent = u->parent;
     }
 
-    if (!curr) return;
+    BTreeNode* treeMinimum(BTreeNode* node) {
+        while (node->left) node = node->left;
+        return node;
+    }
 
-    if (curr->left && curr->right) {
-        BTreeNode* successorParent = curr;
-        BTreeNode* successor = curr->right;
-        while (successor->left) {
-            successorParent = successor;
-            successor = successor->left;
+    void deleteFixup(BTreeNode* &root, BTreeNode* x, BTreeNode* xParent) {
+        while ((x != root) && (!x || x->color == BLACK)) {
+            if (x == xParent->left) {
+                BTreeNode* w = xParent->right;
+                if (w && w->color == RED) {
+                    w->color = BLACK;
+                    xParent->color = RED;
+                    rotateLeft(root, xParent);
+                    w = xParent->right;
+                }
+                if ((!w->left || w->left->color == BLACK) && (!w->right || w->right->color == BLACK)) {
+                    w->color = RED;
+                    x = xParent;
+                    xParent = x->parent;
+                } else {
+                    if (!w->right || w->right->color == BLACK) {
+                        if (w->left) w->left->color = BLACK;
+                        w->color = RED;
+                        rotateRight(root, w);
+                        w = xParent->right;
+                    }
+                    w->color = xParent->color;
+                    xParent->color = BLACK;
+                    if (w->right) w->right->color = BLACK;
+                    rotateLeft(root, xParent);
+                    x = root;
+                    break;
+                }
+            } else {
+                BTreeNode* w = xParent->left;
+                if (w && w->color == RED) {
+                    w->color = BLACK;
+                    xParent->color = RED;
+                    rotateRight(root, xParent);
+                    w = xParent->left;
+                }
+                if ((!w->right || w->right->color == BLACK) && (!w->left || w->left->color == BLACK)) {
+                    w->color = RED;
+                    x = xParent;
+                    xParent = x->parent;
+                } else {
+                    if (!w->left || w->left->color == BLACK) {
+                        if (w->right) w->right->color = BLACK;
+                        w->color = RED;
+                        rotateLeft(root, w);
+                        w = xParent->left;
+                    }
+                    w->color = xParent->color;
+                    xParent->color = BLACK;
+                    if (w->left) w->left->color = BLACK;
+                    rotateRight(root, xParent);
+                    x = root;
+                    break;
+                }
+            }
+        }
+        if (x) x->color = BLACK;
+    }
+
+    void inorder(BTreeNode* node) {
+        if (!node) return;
+        inorder(node->left);
+        cout << node->value << ' ';
+        inorder(node->right);
+    }
+
+public:
+    BinaryTree() : root(nullptr) {}
+
+    void insert(int val) {
+        BTreeNode* z = new BTreeNode(val);
+        BTreeNode* y = nullptr;
+        BTreeNode* x = root;
+
+        while (x) {
+            y = x;
+            if (z->value < x->value) x = x->left;
+            else if (z->value > x->value) x = x->right;
+            else {
+                delete z;
+                return;
+            }
         }
 
-        curr->value = successor->value;
-        curr = successor;
-        parent = successorParent;
+        z->parent = y;
+        if (!y)
+            root = z;
+        else if (z->value < y->value)
+            y->left = z;
+        else
+            y->right = z;
+
+        insertFixup(root, z);
     }
 
-    BTreeNode* child = (curr->left) ? curr->left : curr->right;
-
-    if (!parent)
-        root = child;
-    else if (parent->left == curr)
-        parent->left = child;
-    else
-        parent->right = child;
-
-    delete curr;
-}
-
-void BinaryTree::inorderPrint() {
-    std::stack<BTreeNode*> st;
-    BTreeNode* curr = root;
-
-    while (curr || !st.empty()) {
-
+    bool search(int val) {
+        BTreeNode* curr = root;
         while (curr) {
-            st.push(curr);
-            curr = curr->left;
+            if (val == curr->value)
+                return true;
+            else if (val < curr->value)
+                curr = curr->left;
+            else
+                curr = curr->right;
+        }
+        return false;
+    }
+
+    void deleteValue(int val) {
+        BTreeNode* z = root;
+        while (z && z->value != val) {
+            if (val < z->value) z = z->left;
+            else z = z->right;
+        }
+        if (!z) return;
+
+        BTreeNode* y = z;
+        Color yOriginalColor = y->color;
+        BTreeNode* x;
+        BTreeNode* xParent;
+
+        if (!z->left) {
+            x = z->right;
+            xParent = z->parent;
+            transplant(root, z, z->right);
+        } else if (!z->right) {
+            x = z->left;
+            xParent = z->parent;
+            transplant(root, z, z->left);
+        } else {
+            y = treeMinimum(z->right);
+            yOriginalColor = y->color;
+            x = y->right;
+            if (y->parent == z) {
+                if (x) x->parent = y;
+                xParent = y;
+            } else {
+                transplant(root, y, y->right);
+                y->right = z->right;
+                y->right->parent = y;
+                xParent = y->parent;
+            }
+            transplant(root, z, y);
+            y->left = z->left;
+            y->left->parent = y;
+            y->color = z->color;
         }
 
-        curr = st.top();
-        st.pop();
-        std::cout << curr->value << ' ';
-
-        curr = curr->right;
+        delete z;
+        if (yOriginalColor == BLACK)
+            deleteFixup(root, x, xParent);
     }
-}
 
+    void inorderPrint() {
+        inorder(root);
+    }
+};
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
     ifstream fin("input.txt");
     if (!fin) {
         cerr << "Error opening input file.\n";
