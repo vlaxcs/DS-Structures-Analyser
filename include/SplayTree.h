@@ -26,10 +26,14 @@ public:
 
     SplayNode* insert(float value);
     SplayNode* search(float value);
-    void POT(const SplayNode* current);
+    SplayNode* erase(float value);
+    static void POT(const SplayNode* current);
 
     void setRoot(SplayNode* root);
+    SplayNode* getRoot() {
+        return root;
+    }
     [[nodiscard]] SplayNode* getRoot() const;
 
-    ~SplayTree() = default;
+    ~SplayTree() override = default;
 };

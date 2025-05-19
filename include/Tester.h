@@ -43,11 +43,9 @@ public:
     }
 
     void run() const {
-//        data_structure ds;
-
         for (const auto& file : std::filesystem::directory_iterator(tests_path)){
-            data_structure ds;
             if (file.is_regular_file()) {
+                data_structure ds;
                 std::string file_name = tests_path + "/" + file.path().filename().string();
                 std::cout << std::endl << "Reading data from: " << file_name << std::endl;
 
@@ -63,6 +61,8 @@ public:
                       case 'd': ds.erase(op.second); break;
                       default: status = false; break;
                     }
+
+                    // SplayTree::POT(ds.getRoot());
                 }
 
                 auto end = std::chrono::high_resolution_clock::now();

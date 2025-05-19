@@ -90,8 +90,33 @@ SplayNode* SplayTree::search(const float value) {
     return splay(root, value);
 }
 
+SplayNode* SplayTree::erase(const float value) {
+    if (this->root == nullptr)
+        return nullptr;
+
+    this->root = splay(this->root, value);
+
+    if (this->root->value != value)
+        return this->root;
+
+    SplayNode* temp;
+    if (this->root->left == nullptr) {
+        temp = this->root;
+        this->root = this->root->right;
+    } else {
+        temp = this->root;
+        this->root = splay(this->root->left, value);
+        this->root->right = temp->right;
+    }
+
+    delete temp;
+    return root;
+}
+
+#include <iostream>
 void SplayTree::POT(const SplayNode* current) {
     if (current != nullptr) {
+        std::cout << current->value << " ";
         POT(current->left);
         POT(current->right);
     }
