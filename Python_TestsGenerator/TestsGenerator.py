@@ -124,7 +124,7 @@ def save_to_file(filename, commands):
 
 random.seed(42)
 
-n = 100_000
+n = 1_000_000
 value_range = (1, 10000000)
 
 save_to_file(f"Tests/random_I_{n}.txt", random_insert_only(n, value_range))

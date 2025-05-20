@@ -42,10 +42,15 @@ public:
         return operations;
     }
 
-    void run() const {
+    void run(std::string outputPath) const {
+//        data_structure ds;
+        std::ofstream fout(outputPath);
+        std::stringstream sstream;
+
+
         for (const auto& file : std::filesystem::directory_iterator(tests_path)){
+            data_structure ds;
             if (file.is_regular_file()) {
-                data_structure ds;
                 std::string file_name = tests_path + "/" + file.path().filename().string();
                 std::cout << std::endl << "Reading data from: " << file_name << std::endl;
 
@@ -61,14 +66,14 @@ public:
                       case 'd': ds.erase(op.second); break;
                       default: status = false; break;
                     }
-
-                    // SplayTree::POT(ds.getRoot());
                 }
 
                 auto end = std::chrono::high_resolution_clock::now();
 
                 const std::chrono::duration<double, std::milli> current_runtime = end - start;
                 std::cout << current_runtime;
+                sstream << current_runtime << ", ";
+
 
                 if (status) {
                     ds.addLastRuntime(current_runtime);
@@ -80,5 +85,11 @@ public:
         }
        // auto sort_times = ds.getRuntimes();
         //Test::setStats(current_results_path, sort_name, sort_times);
+
+        auto res = sstream.str();
+        res.erase(res.size() - 2);
+        fout << res << std::endl;
     }
+
+
 };
