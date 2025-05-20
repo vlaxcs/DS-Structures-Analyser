@@ -10,5 +10,6 @@ int main() {
     const Tester<SplayTree> ST; ST.run("SplayResults.csv");
     const Tester<SkipList> SL; SL.run("SkipResults.csv");
     const Tester<BinaryTree> BT; BT.run("BTreeResults.csv");
+    const Tester<RBTree> RBT; RBT.run("RBTreeResults.csv");
     return 0;
 }
