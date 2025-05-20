@@ -55,7 +55,7 @@ int SkipList::GetRandomLevel() const {
 
 void SkipList::insert(int key) {
 	Node* current = head;
-	Node* update[maxLevel + 1];
+	vector<Node*> update(maxLevel + 1, nullptr);
 
 	for(int i = level; i>= 0; i--) {
 		while(current->forward[i] != NULL && current->forward[i]->key <= key) {
