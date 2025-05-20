@@ -6,7 +6,7 @@
 
 int main() {
     const Tester<SplayTree> ST; ST.run();
-    //const Tester<SkipList> SL; SL.run();
-    //const Tester<BinaryTree> BT; BT.run();
+    const Tester<SkipList> SL; SL.run();
+    const Tester<BinaryTree> BT; BT.run();
     return 0;
 }
