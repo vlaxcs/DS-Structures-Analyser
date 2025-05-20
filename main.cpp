@@ -1,15 +1,37 @@
 #include "Tester.h"
 
-// TODO
-// 1. erase() pentru SplayTree
-// 2. BinaryTree vezi dc pica pe 100k numere
-// 3. de dat erase() la inceput de fiecare for() din tester::run()
-// 4. De adaugat runtimes in csv
+void initialize() {
+    std::string tests_path = "../Python_TestsGenerator/Tests";
+    std::filesystem::path results_path = "../Python_TestsGenerator/Results";
+    std::filesystem::path filename = "times.csv";
+
+    std::ofstream fout(results_path / filename);
+    if (!fout.is_open()) {
+        std::cerr << "Failed to open the output file.\n";
+        return;
+    }
+
+    fout << "Data Structure,";
+    bool first = true;
+    for (const auto& entry : fs::directory_iterator(tests_path)) {
+        if (entry.is_regular_file() && entry.path().extension() == ".txt") {
+            std::string filename = entry.path().stem().string();
+            if (!first) fout << ',';
+            fout << filename;
+            first = false;
+        }
+    }
+
+    fout << std::endl;
+    fout.close();
+}
 
 int main() {
-    const Tester<SplayTree> ST; ST.run("SplayResults.csv");
-    const Tester<SkipList> SL; SL.run("SkipResults.csv");
-    const Tester<BinaryTree> BT; BT.run("BTreeResults.csv");
-    const Tester<RBTree> RBT; RBT.run("RBTreeResults.csv");
+    initialize();
+
+    const Tester<SplayTree> ST; ST.run("Splay Tree");
+    const Tester<SkipList> SL; SL.run("Skip List");
+    const Tester<BinaryTree> BT; BT.run("Binary Tree");
+    // const Tester<RBTree> RBT; RBT.run("RBTreeResults.csv");
     return 0;
 }

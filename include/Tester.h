@@ -11,6 +11,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 template<typename data_structure>
 class Tester{
@@ -20,7 +22,7 @@ private:
   std::vector<std::chrono::duration<double, std::milli>> runtimes;
 
 public:
-    Tester() : tests_path("../Python_TestsGenerator/Tests"), results_path("../Results"){};
+    Tester() : tests_path("../Python_TestsGenerator/Tests"), results_path("../Python_TestsGenerator/Results/times.csv"){};
 
     static std::vector<std::pair<std::string, int>> setup(const std::string& file_name) {
         std::vector<std::pair<std::string, int>> operations;
@@ -42,12 +44,11 @@ public:
         return operations;
     }
 
-    void run(std::string outputPath) const {
-//        data_structure ds;
-        std::ofstream fout(outputPath);
+    void run(std::string ds_name) const {
+        std::ofstream fout(results_path, std::ios::app);
         std::stringstream sstream;
 
-
+        fout << std::format("{},", ds_name);
         for (const auto& file : std::filesystem::directory_iterator(tests_path)){
             data_structure ds;
             if (file.is_regular_file()) {
