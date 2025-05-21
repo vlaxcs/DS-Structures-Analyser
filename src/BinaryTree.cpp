@@ -1,11 +1,7 @@
-/// INSTRUCTIUNI
-/// 1 pentru introducerea unui numar in binary tree
-/// 2 pentru cautarea unui numar (cout 1 for found, 0 for not found)
-/// 3 pentru scoaterea unui numar din binary tree
-/// pentru input, un fisier "input.txt" cu un string de forma (nr comanda, nr asupra caruia se efectueaza comanda) * n
 #include <iostream>
 #include <fstream>
 #include <stack>
+#include <string>
 #include "BinaryTree.h"
 using namespace std;
 
@@ -56,7 +52,6 @@ void BinaryTree::insert(int val) {
     else
         parent->right = newNode;
 }
-
 
 bool BinaryTree::search(int val) {
     BTreeNode* curr = root;
@@ -115,7 +110,6 @@ void BinaryTree::inorderPrint() {
     BTreeNode* curr = root;
 
     while (curr || !st.empty()) {
-
         while (curr) {
             st.push(curr);
             curr = curr->left;
@@ -124,11 +118,9 @@ void BinaryTree::inorderPrint() {
         curr = st.top();
         st.pop();
         std::cout << curr->value << ' ';
-
         curr = curr->right;
     }
 }
-
 
 int main() {
     ios::sync_with_stdio(false);
@@ -140,14 +132,16 @@ int main() {
     }
 
     BinaryTree tree;
-    int a, b;
-    while (fin >> a >> b) {
-        if (a == 1) {
-            tree.insert(b);
-        } else if (a == 2) {
-            cout << (tree.search(b) ? 1 : 0) << " ";
-        } else if (a == 3) {
-            tree.erase(b);
+    string command;
+    int number;
+
+    while (fin >> command >> number) {
+        if (command == "insert") {
+            tree.insert(number);
+        } else if (command == "search") {
+            cout << (tree.search(number) ? 1 : 0) << " ";
+        } else if (command == "delete") {
+            tree.erase(number);
         }
     }
 

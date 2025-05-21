@@ -1,8 +1,8 @@
-/// INSTRUCTIUNI
-/// 1 pentru introducerea unui numar in binary tree
-/// 2 pentru cautarea unui numar (cout 1 for found, 0 for not found)
-/// 3 pentru scoaterea unui numar din binary tree
-/// pentru input, un fisier "input.txt" cu un string de forma (nr comanda, nr asupra caruia se efectueaza comanda) * n
+/// Comenzi disponibile pentru binary tree:
+/// insert pentru introducerea unui număr
+/// search pentru căutarea unui număr (afișează 1 dacă e găsit, altfel 0)
+/// delete pentru ștergerea unui număr
+/// Input: fișierul "input.txt" cu linii de forma: comanda valoare
 
 #include <iostream>
 #include <fstream>
@@ -270,14 +270,15 @@ int main() {
     }
 
     BinaryTree tree;
-    int a, b;
-    while (fin >> a >> b) {
-        if (a == 1) {
-            tree.insert(b);
-        } else if (a == 2) {
-            cout << (tree.search(b) ? 1 : 0) << " ";
-        } else if (a == 3) {
-            tree.erase(b);
+    string command;
+    int value;
+    while (fin >> command >> value) {
+        if (command == "insert") {
+            tree.insert(value);
+        } else if (command == "search") {
+            cout << (tree.search(value) ? 1 : 0) << " ";
+        } else if (command == "delete") {
+            tree.erase(value);
         }
     }
 
