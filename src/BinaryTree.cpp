@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stack>
 #include <string>
+#include <chrono>
 #include "BinaryTree.h"
 using namespace std;
 
@@ -125,6 +126,7 @@ void BinaryTree::inorderPrint() {
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+    auto start = chrono::high_resolution_clock::now(); 
     ifstream fin("input.txt");
     if (!fin) {
         cerr << "Error opening input file.\n";
@@ -145,9 +147,15 @@ int main() {
         }
     }
 
+    auto end = chrono::high_resolution_clock::now();
+
     cout << "\n";
     tree.inorderPrint();
     cout << "\n";
+
+    
+    chrono::duration<double> elapsed = end - start;
+    cout << "Execution time: " << elapsed.count() << " seconds\n";
 
     return 0;
 }
