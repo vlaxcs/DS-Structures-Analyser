@@ -210,7 +210,7 @@ public:
         return false;
     }
 
-    void deleteValue(int val) {
+    void erase(int val) {
         BTreeNode* z = root;
         while (z && z->value != val) {
             if (val < z->value) z = z->left;
@@ -277,7 +277,7 @@ int main() {
         } else if (a == 2) {
             cout << (tree.search(b) ? 1 : 0) << " ";
         } else if (a == 3) {
-            tree.deleteValue(b);
+            tree.erase(b);
         }
     }
 

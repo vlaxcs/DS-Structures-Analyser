@@ -71,7 +71,7 @@ bool BinaryTree::search(int val) {
     return false;
 }
 
-void BinaryTree::deleteValue(int val) {
+void BinaryTree::erase(int val) {
     BTreeNode* parent = nullptr;
     BTreeNode* curr = root;
 
@@ -147,7 +147,7 @@ int main() {
         } else if (a == 2) {
             cout << (tree.search(b) ? 1 : 0) << " ";
         } else if (a == 3) {
-            tree.deleteValue(b);
+            tree.erase(b);
         }
     }
 
