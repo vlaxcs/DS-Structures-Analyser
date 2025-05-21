@@ -9,23 +9,18 @@ struct BTreeNode {
     BTreeNode(int val) : value(val), left(nullptr), right(nullptr) {}
 };
 
-class BinaryTree : public DataStructure{
+class BinaryTree : public DataStructure {
 private:
     BTreeNode* root;
 
     BTreeNode* insert(BTreeNode* node, int val);
     bool search(BTreeNode* node, int val);
-    BTreeNode* deleteNode(BTreeNode* node, int val);
     BTreeNode* findMin(BTreeNode* node);
-    void inorder(BTreeNode* node);
 
 public:
     BinaryTree() : root(nullptr) {}
-
     void insert(int val);
     bool search(int val);
     void erase(int val);
     void inorderPrint();
-
-    ~BinaryTree() override = default;
 };
