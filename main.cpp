@@ -4,7 +4,7 @@
 void initialize() {
     std::string tests_path = "../Python_TestsGenerator/Tests";
     std::filesystem::path results_path = "../Python_TestsGenerator/Results";
-    std::filesystem::path filename = "times.csv";
+    std::filesystem::path filename = "times5.csv";
 
     std::ofstream fout(results_path / filename);
     if (!fout.is_open()) {
