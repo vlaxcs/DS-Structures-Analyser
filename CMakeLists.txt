@@ -8,6 +8,7 @@ add_executable(T2SD main.cpp
             src/SkipList.cpp
             src/SplayTree.cpp
             src/BinaryTree.cpp
+            src/RBTree.cpp
 )
 
 target_include_directories(T2SD PUBLIC include)
