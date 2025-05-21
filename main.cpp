@@ -1,4 +1,5 @@
-#include "Tester.h"
+#include "../include/Tester.h"
+#include "../include/RBTree.h"
 
 void initialize() {
     std::string tests_path = "../Python_TestsGenerator/Tests";
@@ -32,6 +33,6 @@ int main() {
     const Tester<SplayTree> ST; ST.run("Splay Tree");
     const Tester<SkipList> SL; SL.run("Skip List");
     const Tester<BinaryTree> BT; BT.run("Binary Tree");
-    // const Tester<RBTree> RBT; RBT.run("RBTreeResults.csv");
+    const Tester<RBTree> RBT; RBT.run("RBTreeResults.csv");
     return 0;
 }

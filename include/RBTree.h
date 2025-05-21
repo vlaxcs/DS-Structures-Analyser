@@ -1,33 +1,33 @@
 #pragma once
-
+#include "DataStructure.h"
 #include <iostream>
 using namespace std;
 
 enum Color { RED, BLACK };
 
-struct BTreeNode {
+struct RBTreeNode {
     int value;
     Color color;
-    BTreeNode* left;
-    BTreeNode* right;
-    BTreeNode* parent;
-    BTreeNode(int val) : value(val), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
+    RBTreeNode* left;
+    RBTreeNode* right;
+    RBTreeNode* parent;
+    RBTreeNode(int val) : value(val), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
 };
 
-class BinaryTree {
+class RBTree : public DataStructure {
 private:
-    BTreeNode* root;
+    RBTreeNode* root;
 
-    void rotateLeft(BTreeNode* &root, BTreeNode* x);
-    void rotateRight(BTreeNode* &root, BTreeNode* y);
-    void insertFixup(BTreeNode* &root, BTreeNode* z);
-    void transplant(BTreeNode* &root, BTreeNode* u, BTreeNode* v);
-    BTreeNode* treeMinimum(BTreeNode* node);
-    void deleteFixup(BTreeNode* &root, BTreeNode* x, BTreeNode* xParent);
-    void inorder(BTreeNode* node);
+    void rotateLeft(RBTreeNode* &root, RBTreeNode* x);
+    void rotateRight(RBTreeNode* &root, RBTreeNode* y);
+    void insertFixup(RBTreeNode* &root, RBTreeNode* z);
+    void transplant(RBTreeNode* &root, RBTreeNode* u, RBTreeNode* v);
+    RBTreeNode* treeMinimum(RBTreeNode* node);
+    void deleteFixup(RBTreeNode* &root, RBTreeNode* x, RBTreeNode* xParent);
+    void inorder(RBTreeNode* node);
 
 public:
-    BinaryTree();
+    RBTree();
     void insert(int val);
     bool search(int val);
     void erase(int val);

@@ -6,43 +6,10 @@
 
 using namespace std;
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    auto start = chrono::high_resolution_clock::now(); 
-    ifstream fin("input.txt");
-    if (!fin) {
-        cerr << "Error opening input file.\n";
-        return 1;
-    }
+RBTree::RBTree() : root(nullptr) {}
 
-    BinaryTree tree;
-    string command;
-    int value;
-    while (fin >> command >> value) {
-        if (command == "insert") {
-            tree.insert(value);
-        } else if (command == "search") {
-            cout << (tree.search(value) ? 1 : 0) << " ";
-        } else if (command == "delete") {
-            tree.erase(value);
-        }
-    }
-    auto end = chrono::high_resolution_clock::now();
-
-    cout << "\n";
-    tree.inorderPrint();
-    cout << "\n";
-    chrono::duration<double> elapsed = end - start;
-    cout << "Execution time: " << elapsed.count() << " seconds\n";
-
-    return 0;
-}
-
-BinaryTree::BinaryTree() : root(nullptr) {}
-
-void BinaryTree::rotateLeft(BTreeNode* &root, BTreeNode* x) {
-    BTreeNode* y = x->right;
+void RBTree::rotateLeft(RBTreeNode* &root, RBTreeNode* x) {
+    RBTreeNode* y = x->right;
     x->right = y->left;
     if (y->left) y->left->parent = x;
     y->parent = x->parent;
@@ -53,8 +20,8 @@ void BinaryTree::rotateLeft(BTreeNode* &root, BTreeNode* x) {
     x->parent = y;
 }
 
-void BinaryTree::rotateRight(BTreeNode* &root, BTreeNode* y) {
-    BTreeNode* x = y->left;
+void RBTree::rotateRight(RBTreeNode* &root, RBTreeNode* y) {
+    RBTreeNode* x = y->left;
     y->left = x->right;
     if (x->right) x->right->parent = y;
     x->parent = y->parent;
@@ -65,10 +32,10 @@ void BinaryTree::rotateRight(BTreeNode* &root, BTreeNode* y) {
     y->parent = x;
 }
 
-void BinaryTree::insertFixup(BTreeNode* &root, BTreeNode* z) {
+void RBTree::insertFixup(RBTreeNode* &root, RBTreeNode* z) {
     while (z->parent && z->parent->color == RED) {
         if (z->parent == z->parent->parent->left) {
-            BTreeNode* y = z->parent->parent->right;
+            RBTreeNode* y = z->parent->parent->right;
             if (y && y->color == RED) {
                 z->parent->color = BLACK;
                 y->color = BLACK;
@@ -84,7 +51,7 @@ void BinaryTree::insertFixup(BTreeNode* &root, BTreeNode* z) {
                 rotateRight(root, z->parent->parent);
             }
         } else {
-            BTreeNode* y = z->parent->parent->left;
+            RBTreeNode* y = z->parent->parent->left;
             if (y && y->color == RED) {
                 z->parent->color = BLACK;
                 y->color = BLACK;
@@ -104,7 +71,7 @@ void BinaryTree::insertFixup(BTreeNode* &root, BTreeNode* z) {
     root->color = BLACK;
 }
 
-void BinaryTree::transplant(BTreeNode* &root, BTreeNode* u, BTreeNode* v) {
+void RBTree::transplant(RBTreeNode* &root, RBTreeNode* u, RBTreeNode* v) {
     if (!u->parent)
         root = v;
     else if (u == u->parent->left)
@@ -114,15 +81,15 @@ void BinaryTree::transplant(BTreeNode* &root, BTreeNode* u, BTreeNode* v) {
     if (v) v->parent = u->parent;
 }
 
-BTreeNode* BinaryTree::treeMinimum(BTreeNode* node) {
+RBTreeNode* RBTree::treeMinimum(RBTreeNode* node) {
     while (node->left) node = node->left;
     return node;
 }
 
-void BinaryTree::deleteFixup(BTreeNode* &root, BTreeNode* x, BTreeNode* xParent) {
+void RBTree::deleteFixup(RBTreeNode* &root, RBTreeNode* x, RBTreeNode* xParent) {
     while ((x != root) && (!x || x->color == BLACK)) {
         if (x == xParent->left) {
-            BTreeNode* w = xParent->right;
+            RBTreeNode* w = xParent->right;
             if (w && w->color == RED) {
                 w->color = BLACK;
                 xParent->color = RED;
@@ -148,7 +115,7 @@ void BinaryTree::deleteFixup(BTreeNode* &root, BTreeNode* x, BTreeNode* xParent)
                 break;
             }
         } else {
-            BTreeNode* w = xParent->left;
+            RBTreeNode* w = xParent->left;
             if (w && w->color == RED) {
                 w->color = BLACK;
                 xParent->color = RED;
@@ -178,17 +145,17 @@ void BinaryTree::deleteFixup(BTreeNode* &root, BTreeNode* x, BTreeNode* xParent)
     if (x) x->color = BLACK;
 }
 
-void BinaryTree::inorder(BTreeNode* node) {
+void RBTree::inorder(RBTreeNode* node) {
     if (!node) return;
     inorder(node->left);
     cout << node->value << ' ';
     inorder(node->right);
 }
 
-void BinaryTree::insert(int val) {
-    BTreeNode* z = new BTreeNode(val);
-    BTreeNode* y = nullptr;
-    BTreeNode* x = root;
+void RBTree::insert(int val) {
+    RBTreeNode* z = new RBTreeNode(val);
+    RBTreeNode* y = nullptr;
+    RBTreeNode* x = root;
 
     while (x) {
         y = x;
@@ -211,8 +178,8 @@ void BinaryTree::insert(int val) {
     insertFixup(root, z);
 }
 
-bool BinaryTree::search(int val) {
-    BTreeNode* curr = root;
+bool RBTree::search(int val) {
+    RBTreeNode* curr = root;
     while (curr) {
         if (val == curr->value)
             return true;
@@ -224,18 +191,18 @@ bool BinaryTree::search(int val) {
     return false;
 }
 
-void BinaryTree::erase(int val) {
-    BTreeNode* z = root;
+void RBTree::erase(int val) {
+    RBTreeNode* z = root;
     while (z && z->value != val) {
         if (val < z->value) z = z->left;
         else z = z->right;
     }
     if (!z) return;
 
-    BTreeNode* y = z;
+    RBTreeNode* y = z;
     Color yOriginalColor = y->color;
-    BTreeNode* x;
-    BTreeNode* xParent;
+    RBTreeNode* x;
+    RBTreeNode* xParent;
 
     if (!z->left) {
         x = z->right;
@@ -269,6 +236,6 @@ void BinaryTree::erase(int val) {
         deleteFixup(root, x, xParent);
 }
 
-void BinaryTree::inorderPrint() {
+void RBTree::inorderPrint() {
     inorder(root);
 }

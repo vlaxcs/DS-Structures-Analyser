@@ -3,6 +3,7 @@
 #include "SplayTree.h"
 #include "SkipList.h"
 #include "BinaryTree.h"
+#include "RBTree.h"
 
 #include <string>
 #include <chrono>
